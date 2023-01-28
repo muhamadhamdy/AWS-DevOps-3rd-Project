@@ -218,8 +218,8 @@ jobs:
           at: ~/
       - run:
           name: Configure server
+          working_directory: ./.circleci/ansible
           command: |
-            cd .circleci/ansible
             cat inventory.txt 
             ansible-playbook -i .inventory.txt configure-server.yml
       - destroy_environment:
@@ -268,8 +268,8 @@ jobs:
                --query 'Reservations[*].Instances[*].PublicIpAddress' \
                --output text)
             echo 'Backend IP : ' && echo $BACKEND_PUBLIC_IP
-            curl -d 'http://${BACKEND_Public_IP}:3030' https://kvdb.io/${KVDB_BUCKET}/backendurl
-            echo "API_URL=http://${BACKEND_Public_IP}:3030" >> frontend/.env
+            curl -d 'http://${BACKEND_PUBLIC_IP}:3030' https://kvdb.io/${KVDB_BUCKET}/backendurl
+            echo "API_URL=http://${BACKEND_PUBLIC_IP}:3030" >> frontend/.env
             cat frontend/.env
       - run:
           name: Deploy frontend artifact
@@ -302,7 +302,7 @@ jobs:
           working_directory: ./.circleci/ansible
           command: |
             cat inventory.txt
-            ansible-playbook -i inventory.txt deploy-backend.yml -v
+            ansible-playbook -i inventory.txt deploy-backend.yml -vvv
       - destroy_environment:
           id: ${CIRCLE_WORKFLOW_ID:0:7}
       - revert_migrations:
@@ -337,15 +337,16 @@ jobs:
 
   cloudfront-update:
     docker:
-      - image: amazon/aws-cli
+      - image: cimg/node:13.8.0
     steps:
       - checkout
+      - install_awscli
       - run:
           name: Install dependencies
           command: |
-            yum install -y tar gzip curl
-            curl -sL https://rpm.nodesource.com/setup_10.x | bash -
-            yum install -y nodejs
+            sudo apt install -y tar gzip
+            #curl -sL https://rpm.nodesource.com/setup_10.x | bash -
+            #yum install -y nodejs
       - run:
           name: Store old WorkflowID in kvdb.io for cleanup phase
           working_directory: ./.circleci/files
