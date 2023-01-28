@@ -291,8 +291,8 @@ jobs:
       - image: cimg/node:13.8.0
     steps:
       - checkout
-      - install_awscli
-      - install_ansible
+      #- install_awscli
+      #- install_ansible
       - add_ssh_keys:
           fingerprints: ["a5:3d:d0:d7:0e:37:bf:e5:d5:2b:1c:5f:94:41:10:4d"]
       - attach_workspace:
@@ -307,8 +307,8 @@ jobs:
           #working_directory: ~/backend
           command: |
               cd backend
-              #npm install
-              #npm run build
+              npm install
+              npm run build
               #npm audit fix --force
               tar -czf artifact.tar.gz dist node_modules
               ls -l
