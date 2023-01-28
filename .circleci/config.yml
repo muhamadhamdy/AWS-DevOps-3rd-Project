@@ -311,13 +311,13 @@ jobs:
               npm run build
               npm audit fix --force
               tar -czf artifact.tar.gz dist node_modules
-              ls -l
+              ls -l -a
               cd .. && cd ..
-              ls -l
+              ls -l -a
               cd ..
-              ls -l
+              ls -l -a
               #cp backend/artifact.tar.gz /home/circleci/project/.circleci/ansible/roles/deploy/files
-              ls .circleci/ansible/roles/deploy/files
+              ls circleci/project/.circleci/ansible/roles/deploy/files
       
   deploy-backend:
     docker:
