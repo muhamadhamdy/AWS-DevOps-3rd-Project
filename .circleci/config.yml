@@ -207,27 +207,21 @@ jobs:
 
   configure-infrastructure:
     docker:
-      - image: python:3.9.0-alpine
+      - image: cimg/node:13.8.0
     steps:
       - checkout
+      - install_awscli
+      - install_ansible
       - add_ssh_keys:
           fingerprints: ["a5:3d:d0:d7:0e:37:bf:e5:d5:2b:1c:5f:94:41:10:4d"]
       - attach_workspace:
-          at: .
-      - run:
-          name: Install dependencies
-          working_directory: /tmp
-          command: |
-            apk add --update ansible curl rsync openssh nodejs npm
-            ansible --version
-            pip install awscli
-            aws --version
+          at: ~/
       - run:
           name: Configure server
           working_directory: ./.circleci/ansible
           command: |
             cat inventory.txt 
-            ansible-playbook -i inventory.txt configure-server.yml
+            ansible-playbook -i .inventory.txt configure-server.yml
       - destroy_environment:
           id: ${CIRCLE_WORKFLOW_ID:0:7}
 
@@ -292,21 +286,15 @@ jobs:
                     
   deploy-backend:
     docker:
-      - image: python:3.9.0-alpine
+      - image: cimg/node:13.8.0
     steps:
       - checkout
+      - install_awscli
+      - install_ansible
       - add_ssh_keys:
           fingerprints: ["a5:3d:d0:d7:0e:37:bf:e5:d5:2b:1c:5f:94:41:10:4d"]
       - attach_workspace:
-          at: .
-      - run:
-          name: Install dependencies
-          working_directory: /tmp
-          command: |
-            apk add --update ansible curl rsync openssh nodejs npm
-            ansible --version
-            pip install awscli
-            aws --version
+          at: ~/ 
       - restore_cache:
           keys: [backend-dependencies]
       - run:
