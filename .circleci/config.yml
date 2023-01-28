@@ -264,7 +264,7 @@ jobs:
           name: Get backend URL
           command: |
             BACKEND_PUBLIC_IP=$(aws ec2 describe-instances \
-              --filters "Name=tag:Name,Values=backend-${CIRCLE_WOKFLOW_ID:0:7}" \
+              --filters "Name=tag:Name,Values=udapeople-backend-${CIRCLE_WOKFLOW_ID:0:7}" \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --output text)
             curl -d 'http://${BACKEND_Public_IP}:3030' http://kvdb.io/${KVDB_BUCKET}/backendurl
