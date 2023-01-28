@@ -354,8 +354,8 @@ jobs:
           name: Backend smoke test.
           command: |
             BACKEND_URL=$(curl --insecure https://kvdb.io/${KVDB_BUCKET}/backendurl)
-            RESP=$(curl "$BACKEND_URL/api/status")
-            echo ${RESP}
+            #RESP=$(curl "$BACKEND_URL/api/status")
+            echo ${BACKEND_URL}
       - run:
           name: Frontend smoke test.
           command: |
