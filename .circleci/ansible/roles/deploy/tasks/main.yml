@@ -1,19 +1,19 @@
 ---
-- name: "show remote environment"
+- name: "show environment variables"
   shell: env
    
-- name: "copy backend binaries"
+- name: "copy backend files"
   become: true
   synchronize:
     src: ../../backend/dist
-    dest: /home/ubuntu/uda_app
+    dest: /home/ubuntu/udapeople-app
     recursive: true
 
 - name: "copy node_modules"
   become: true
   synchronize:
     src: ../../backend/node_modules
-    dest: /home/ubuntu/uda_app
+    dest: /home/ubuntu/udapeople-app
     recursive: true
 
 - name: "delete anything that might already be running"
@@ -24,7 +24,7 @@
   become: true
   command: pm2 start -f ./main.js
   args:
-    chdir: /home/ubuntu/uda_app/dist
+    chdir: /home/ubuntu/udapeople-app/dist
 
 - name: print message
   debug:
