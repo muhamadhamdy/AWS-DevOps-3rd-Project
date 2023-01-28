@@ -264,9 +264,10 @@ jobs:
           name: Get backend URL
           command: |
             BACKEND_PUBLIC_IP=$(aws ec2 describe-instances \
-              --filters "Name=tag:Name,Values=udapeople-backend-${CIRCLE_WOKFLOW_ID:0:7}" \
-              --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --output text)
+               --filters "Name=tag:Name,Values=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+               --query 'Reservations[*].Instances[*].PublicIpAddress' \
+               --output text)
+            echo 'Backend IP : ' && echo $BACKEND_PUBLIC_IP
             curl -d 'http://${BACKEND_Public_IP}:3030' http://kvdb.io/${KVDB_BUCKET}/backendurl
             echo "API_URL=http://${BACKEND_Public_IP}:3030" >> frontend/.env
             cat frontend/.env
@@ -301,7 +302,7 @@ jobs:
           working_directory: ./.circleci/ansible
           command: |
             cat inventory.txt
-            ansible-playbook -i inventory.txt deploy-backend.yml -vvv
+            ansible-playbook -i inventory.txt deploy-backend.yml -v
       - destroy_environment:
           id: ${CIRCLE_WORKFLOW_ID:0:7}
       - revert_migrations:
