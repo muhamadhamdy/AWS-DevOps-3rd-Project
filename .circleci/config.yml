@@ -1,15 +1,15 @@
 version: 2.1
 
 executor:
-  node:
-    docker:
-      - image: circleci/node:13.8.0
-  python:
-    docker:
-      - image: python:3.9.0-alpine
-  aws:
-    docker:
-      - image: amazon/aws-cli
+    node:
+      docker:
+        - image: circleci/node:13.8.0
+    python:
+      docker:
+        - image: python:3.9.0-alpine
+    aws:
+      docker:
+        - image: amazon/aws-cli
 
 commands:
   destroy_environment:
