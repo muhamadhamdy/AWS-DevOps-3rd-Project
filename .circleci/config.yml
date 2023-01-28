@@ -300,6 +300,9 @@ jobs:
       - restore_cache:
           keys: [backend-dependencies]
       - run:
+          name: install rsync
+          command: sudo apt install -y rsync
+      - run:
           name: Deploy backend
           working_directory: ./.circleci/ansible
           command: |
