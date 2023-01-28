@@ -286,7 +286,36 @@ jobs:
       - revert_migrations:
           id: ${CIRCLE_WORKFLOW_ID:0:7}
            
-
+  test-deploy-backend:
+    docker:
+      - image: cimg/node:13.8.0
+    steps:
+      - checkout
+      - install_awscli
+      - install_ansible
+      - add_ssh_keys:
+          fingerprints: ["a5:3d:d0:d7:0e:37:bf:e5:d5:2b:1c:5f:94:41:10:4d"]
+      - attach_workspace:
+          at: ~/
+      - restore_cache:
+          keys: [backend-dependencies]
+      - run:
+          name: install rsync
+          command: sudo apt install -y rsync
+      - run:
+          name: Install backend dependencies
+          #working_directory: ~/backend
+          command: |
+              cd backend
+              npm install
+              npm run build
+              npm audit fix --force
+              tar -czf artifact.tar.gz dist node_modules
+              ls -l
+              cd ..
+              cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files/artifact.tar.gz
+              ls .circleci/ansible/roles/deploy/files
+      
   deploy-backend:
     docker:
       - image: cimg/node:13.8.0
@@ -412,7 +441,7 @@ workflows:
     jobs:
       - build-frontend
       - build-backend
-      - deploy-backend
+      - test-deploy-backend
       - test-frontend:
           requires: [build-frontend]
       - test-backend:
