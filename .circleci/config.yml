@@ -380,7 +380,7 @@ jobs:
 
 
 workflows:
-  default:
+  udapeople:
     jobs:
       - build-frontend
       - build-backend
