@@ -39,7 +39,7 @@ commands:
           when: on_fail
           working_directory: ./backend
           command: |
-            SUCCESS=$(curl --insecure http://kvdb.io/${KVDB_BUCKET}/migration_<< parameters.id >>)
+            SUCCESS=$(curl --insecure https://kvdb.io/${KVDB_BUCKET}/migration_<< parameters.id >>)
             if(( $SUCCESS==1 )); 
             then
               cd ~/project/backend
@@ -242,7 +242,7 @@ jobs:
           command: |
             if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
             then
-              curl -d '1' http://kvdb.io/${KVDB_BUCKET}/migration_${CIRCLE_WORKFLOW_ID:0:7} 
+              curl -d '1' https://kvdb.io/${KVDB_BUCKET}/migration_${CIRCLE_WORKFLOW_ID:0:7} 
             fi 
       - destroy_environment:
           id: ${CIRCLE_WORKFLOW_ID:0:7}
@@ -268,7 +268,7 @@ jobs:
                --query 'Reservations[*].Instances[*].PublicIpAddress' \
                --output text)
             echo 'Backend IP : ' && echo $BACKEND_PUBLIC_IP
-            curl -d 'http://${BACKEND_Public_IP}:3030' http://kvdb.io/${KVDB_BUCKET}/backendurl
+            curl -d 'http://${BACKEND_Public_IP}:3030' https://kvdb.io/${KVDB_BUCKET}/backendurl
             echo "API_URL=http://${BACKEND_Public_IP}:3030" >> frontend/.env
             cat frontend/.env
       - run:
@@ -323,7 +323,7 @@ jobs:
       - run:
           name: Backend smoke test.
           command: |
-            BACKEND_URL=$(curl --insecure http://kvdb.io/${KVDB_BUCKET}/backendurl)
+            BACKEND_URL=$(curl --insecure https://kvdb.io/${KVDB_BUCKET}/backendurl)
             curl "$BACKEND_URL/api/status"
       - run:
           name: Frontend smoke test.
@@ -353,7 +353,7 @@ jobs:
             WorkflowID=$(aws cloudformation \
               list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
               --no-paginate --output text)
-            curl -d '$WorkflowID' http://kvdb.io/${KVDB_BUCKET}/workflowid 
+            curl -d '$WorkflowID' https://kvdb.io/${KVDB_BUCKET}/workflowid 
       - run:
           name: Update cloudfront 
           working_directory: ./.circleci/files
@@ -374,7 +374,7 @@ jobs:
       - run:
           name: Clean up old environment
           command: |
-            OldWorkflowID=$(curl --insecure http://kvdb.io/${KVDB_BUCKET}/workflowid)
+            OldWorkflowID=$(curl --insecure https://kvdb.io/${KVDB_BUCKET}/workflowid)
             CurrentWorkflowID=${CIRCLE_WORKFLOW_ID:0:7}
             if [[ "$CurrentWorkflowID" != "$OldWorkflowID" ]]
             then
