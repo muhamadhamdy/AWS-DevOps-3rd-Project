@@ -244,7 +244,7 @@ jobs:
           command: |
             if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
             then
-              curl -d '1' https://kvdb.io/${KVDB_BUCKET}/migration_${CIRCLE_WORKFLOW_ID:0:7} 
+              curl -d "1" https://kvdb.io/${KVDB_BUCKET}/migration_${CIRCLE_WORKFLOW_ID:0:7} 
             fi 
       - destroy_environment:
           id: ${CIRCLE_WORKFLOW_ID:0:7}
@@ -269,10 +269,9 @@ jobs:
                --filters "Name=tag:Name,Values=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
                --query 'Reservations[*].Instances[*].PublicIpAddress' \
                --output text)
-            echo 'Backend IP : ' && echo 'http://${BACKEND_PUBLIC_IP}:3030' && echo "http://${BACKEND_PUBLIC_IP}:3030"
             curl -d "http://${BACKEND_PUBLIC_IP}:3030" https://kvdb.io/${KVDB_BUCKET}/backendurl
-            echo "API_URL=http://${BACKEND_PUBLIC_IP}:3030" >> frontend/.env
-            cat frontend/.env
+            echo "API_URL=http://${BACKEND_PUBLIC_IP}:3030" >> frontend/dist/.env
+            cat frontend/dist/.env
             curl https://kvdb.io/${KVDB_BUCKET}/backendurl
       - run:
           name: Deploy frontend artifact
@@ -305,12 +304,24 @@ jobs:
           command: sudo apt install -y rsync
       - run:
           name: Install backend dependencies
-          #working_directory: ~/backend
           command: |
               cd backend
               npm install
               npm run build
               npm audit fix --force
+
+              echo "ENVIRONMENT=production" >> dist/.env
+              echo "VERSION=1" >> dist/.env
+              echo "TYPEORM_CONNECTION=${TYPEORM_CONNECTION}" >> dist/.env
+              echo "TYPEORM_MIGRATIONS_DIR=${TYPEORM_MIGRATIONS_DIR}" >> dist/.env
+              echo "TYPEORM_ENTITIES=${TYPEORM_ENTITIES}" >> dist/.env
+              echo "TYPEORM_MIGRATIONS=${TYPEORM_MIGRATIONS}" >> dist/.env
+              echo "TYPEORM_HOST=localhost" >> dist/.env
+              echo "TYPEORM_PORT=5532" >> dist/.env
+              echo "TYPEORM_USERNAME=postgres" >> dist/.env
+              echo "TYPEORM_PASSWORD=${TYPEORM_PASSWORD}" >> dist/.env
+              echo "TYPEORM_DATABASE=${TYPEORM_DATABASE}" >> dist/.env
+
               tar -czf artifact.tar.gz dist node_modules
               cd ..
               sudo cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
@@ -342,7 +353,8 @@ jobs:
           name: Backend smoke test.
           command: |
             BACKEND_URL=$(curl --insecure https://kvdb.io/${KVDB_BUCKET}/backendurl)
-            curl "$BACKEND_URL/api/status"
+            RESP=$(curl "$BACKEND_URL/api/status")
+            echo ${RESP}
       - run:
           name: Frontend smoke test.
           command: |
@@ -372,7 +384,7 @@ jobs:
             WorkflowID=$(aws cloudformation \
               list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
               --no-paginate --output text)
-            curl -d '$WorkflowID' https://kvdb.io/${KVDB_BUCKET}/workflowid 
+            curl -d "$WorkflowID" https://kvdb.io/${KVDB_BUCKET}/workflowid 
       - run:
           name: Update cloudfront 
           working_directory: ./.circleci/files
@@ -431,15 +443,8 @@ workflows:
           requires: [run-migrations]
       - deploy-backend:
           requires: [run-migrations]
-      - hold:
-          filters:
-            branches:
-              only:
-                - main
-          type: approval
-          requires: [deploy-backend, deploy-frontend]
       - smoke-test:
-          requires: [hold]
+          requires: [deploy-backend, deploy-frontend]
       - cloudfront-update:
           requires: [smoke-test]
       - cleanup:

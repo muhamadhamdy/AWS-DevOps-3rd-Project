@@ -12,11 +12,6 @@
     src: artifact.tar.gz
     dest: ~/udapeople-app
 
-#- name: "start pm2 server"
-#  become: true
-#  command: pm2 start -f main.js
-#  args:
-#    chdir: /home/ubuntu/udapeople-app/dist
 - name: "start pm2 server"
   shell: |
     cd ~/udapeople-app/dist
