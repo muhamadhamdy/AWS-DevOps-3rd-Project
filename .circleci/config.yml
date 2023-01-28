@@ -170,7 +170,7 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
-      -run:
+      - run:
         name: Install Dependencies
         command: yum install -y tar gzip
       - run:
