@@ -1,33 +1,30 @@
 ---
-- name: "show remote environment"
-  shell: env
- 
-- name: "copy backend binaries"
-  become: yes
-  synchronize:
-    src: ../../backend
-    dest: /home/ubuntu/udapeople_app
-    recursive: true
+ - name: "show remote environment"
+   shell: env
+   
+  - name: "copy backend binaries"
+   become: true
+   synchronize:
+     src: ../../backend/dist
+     dest: /home/ubuntu/uda_app
+     recursive: true
+     
+ - name: "copy node_modules"
+   become: true
+   synchronize:
+     src: ../../backend/node_modules
+     dest: /home/ubuntu/uda_app
+     recursive: true
 
-- name: "Build backend"
-  shell: |
-    cd /home/ubuntu/udapeople-app
-    npm install
-    npm run build
-
-- name: "delete anything that might already be running"
-  become: true
-  command: pm2 delete all
-  ignore_errors: true
-
-- name: "start node app with pm2"
-  shell: |
-    cd /home/ubuntu/udapeople_app/dist
-    pm2 stop default
-    pm2 start -f main.js
-  register: execute_node
-  args:
-    chdir: /home/ubuntu/udapeople_app/dist
+  - name: "delete anything that might already be running"
+   become: true
+   command: pm2 delete all
+   ignore_errors: true
+  - name: "start server"
+   become: true
+   command: pm2 start -f ./main.js
+   args:
+     chdir: /home/ubuntu/uda_app/dist
 
 - name: print message
   debug:
