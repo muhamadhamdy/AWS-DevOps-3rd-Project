@@ -286,37 +286,7 @@ jobs:
       - revert_migrations:
           id: ${CIRCLE_WORKFLOW_ID:0:7}
            
-  test-deploy-backend:
-    docker:
-      - image: cimg/node:13.8.0
-    steps:
-      - checkout
 
-      - add_ssh_keys:
-          fingerprints: ["a5:3d:d0:d7:0e:37:bf:e5:d5:2b:1c:5f:94:41:10:4d"]
-      - attach_workspace:
-          at: ~/
-      - restore_cache:
-          keys: [backend-dependencies]
-      
-      - run:
-          name: Install backend dependencies
-          #working_directory: ~/backend
-          command: |
-              echo ~
-              ls -l -a
-              cd .circleci
-              ls -l -a
-              cd ansible
-              ls -l -a
-              cd roles
-              ls -l -a
-              cd deploy
-              ls -l -a
-              cd files
-              ls -l 
-
-      
   deploy-backend:
     docker:
       - image: cimg/node:13.8.0
@@ -342,9 +312,8 @@ jobs:
               npm run build
               npm audit fix --force
               tar -czf artifact.tar.gz dist node_modules
-              ls -l
               cd ..
-              cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files/artifact.tar.gz
+              sudo cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
               ls .circleci/ansible/roles/deploy/files
       - run:
           name: Deploy backend
