@@ -1,6 +1,6 @@
 version: 2.1
 
-dockers:
+executor:
   node:
     docker:
       - image: circleci/node:13.8.0
@@ -69,8 +69,9 @@ commands:
 
 
 jobs:
+
   build-frontend:
-    dockers: node
+    executor: node
     steps:
       - checkout
       - restore_cache:
@@ -86,7 +87,7 @@ jobs:
           key: frontend-dependencies
 
   build-backend:
-    dockers: node
+    executor: node
     steps:
       - checkout
       - restore_cache:
@@ -102,7 +103,7 @@ jobs:
           key: backend-dependencies
 
   test-frontend:
-    dockers: node
+    executor: node
     steps:
       - checkout
       - restore_cache:
@@ -115,7 +116,7 @@ jobs:
             npm test
 
   test-backend:
-    dockers: node
+    executor: node
     steps:
       - checkout
       - restore_cache:
@@ -128,7 +129,7 @@ jobs:
              npm test
             
   scan-frontend:
-    dockers: node
+    executor: node
     steps:
       - checkout
       - restore_cache:
@@ -142,7 +143,7 @@ jobs:
             npm audit --audit-level=critical
 
   scan-backend:
-    dockers: node
+    executor: node
     steps:
       - checkout
       - restore_cache:
@@ -157,7 +158,7 @@ jobs:
              npm audit --audit-level=critical
 
   deploy-infrastructure:
-    dockers: aws
+    executor: aws
     steps:
       - checkout
       - run:
@@ -193,7 +194,7 @@ jobs:
           id: ${CIRCLE_WORKFLOW_ID:0:7}    
 
   configure-infrastructure:
-    dockers: aws
+    executor: aws
     steps:
       - checkout
       - install_ansible
@@ -211,7 +212,7 @@ jobs:
           id: ${CIRCLE_WORKFLOW_ID:0:7}
 
   run-migrations:
-    dockers: node
+    executor: node
     steps:
       - checkout
       - install_awscli
@@ -234,7 +235,7 @@ jobs:
           id: ${CIRCLE_WORKFLOW_ID:0:7}  
 
   deploy-frontend:
-    docker: node
+    executor: node
     steps:
       - checkout
       - install_awscli
@@ -267,7 +268,7 @@ jobs:
            
                     
   deploy-backend:
-    dockers: node
+    executor: node
     steps:
       - checkout
       - install_awscli
@@ -303,7 +304,7 @@ jobs:
           id: ${CIRCLE_WORKFLOW_ID:0:7}
 
   smoke-test:
-    dockers: python
+    executor: python
     steps:
       - checkout
       - attach_workspace:
