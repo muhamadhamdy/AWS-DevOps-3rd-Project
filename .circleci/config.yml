@@ -297,24 +297,11 @@ jobs:
       - restore_cache:
           keys: [backend-dependencies]
       - run:
-          name: Install dependencies
+          name: Deploy backend
+          working_directory: ./.circleci/ansible
           command: |
-            cd backend
-            npm install
-      - run:
-          name: Packing backend to ansible files
-          command:
-            cd backend
-            npm run build
-            tar -czf artifact.tar.gz dist/* package*
-            cd .. 
-            cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files 
-      - run:
-          name: Deploy backend to backend server
-          command: |
-            cd .circleci/ansible
-            cat .inventory.txt
-            ansible-playbook -i inventory.txt deploy-backend.yml
+            cat inventory
+            ansible-playbook -i inventory deploy-backend.yaml -vvv
       - destroy_environment:
           id: ${CIRCLE_WORKFLOW_ID:0:7}
       - revert_migrations:
