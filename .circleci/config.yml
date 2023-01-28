@@ -207,9 +207,10 @@ jobs:
 
   configure-infrastructure:
     docker:
-      - image: amazon/aws-cli
+      - image: circleci/node:13.8.0
     steps:
       - checkout
+      - install_awscli
       - install_ansible
       - add_ssh_keys:
           fingerprints: ["49:e2:93:61:32:da:c8:60:89:db:e2:30:f2:6f:c5:3a"]
