@@ -1,14 +1,14 @@
-Public Url to GitHub repository [URL01]
-https://github.com/muhamadhamdy/AWS-DevOps-3nd-Project
+  1. Public Url to GitHub repository (not private) [URL01] 
+	https://github.com/muhamadhamdy/AWS-DevOps-3nd-Project
 
-Public URL for your S3 Bucket frontend app [URL02]
+  2. Public URL for your S3 Bucket (aka, your green candidate front-end) [URL02] 
+	http://udapeople-d71cab2.s3-website-us-east-1.amazonaws.com/
 
+  3. Public URL for your CloudFront distribution (aka, your blue production front-end) [URL03] 
+	https://du1f6vp68fzdd.cloudfront.net/
 
-Public URL for your CloudFront distribution [URL03]
-https://du1f6vp68fzdd.cloudfront.net/
+  4. Public URLs to deployed application back-end in EC2 [URL04] 
+	http://ec2-52-204-47-48.compute-1.amazonaws.com:3030
 
-Public URLs to deployed application backend in EC2 [URL04]
-
-
-Public URL to your Prometheus Server [URL05]
-http://ec2-34-207-227-198.compute-1.amazonaws.com:9090
+  5. Public URL to your Prometheus Server [URL05] 
+	http://ec2-34-207-227-198.compute-1.amazonaws.com:9090
