@@ -171,8 +171,8 @@ jobs:
     steps:
       - checkout
       - run:
-        name: Install Dependencies
-        command: yum install -y tar gzip
+          name: Install Dependencies
+          command: yum install -y tar gzip
       - run:
           name: Deploy backend infrastructure 
           command: |
