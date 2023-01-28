@@ -305,16 +305,18 @@ jobs:
           command: sudo apt install -y rsync
       - run:
           name: Install backend dependencies
-          working_directory: ~/backend
+          #working_directory: ~/backend
           command: |
+              cd backend
               npm install
               npm run build
               tar -czf artifact-${CIRCLE_WORKFLOW_ID:0:7}.tar.gz ./dist ./node_modules
-              cp artifact-${CIRCLE_WORKFLOW_ID:0:7}.tar.gz ~/.circleci/ansible/roles/deploy/files
+              cd ..
+              cp backend/artifact-${CIRCLE_WORKFLOW_ID:0:7}.tar.gz .circleci/ansible/roles/deploy/files
       - run:
           name: Deploy backend
-          working_directory: ~/.circleci/ansible
           command: |
+            cd .circleci/ansible
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml -vvv
       - destroy_environment:
