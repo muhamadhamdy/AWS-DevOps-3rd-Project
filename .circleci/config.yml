@@ -296,12 +296,12 @@ jobs:
       - add_ssh_keys:
           fingerprints: ["6a:d1:4e:e3:6c:3a:9d:86:80:d6:2c:69:c5:51:c5:6c"]
       - attach_workspace:
-          at: ~/ 
-      - restore_cache:
-          keys: [backend-dependencies]
+          at: ~/
       - run:
           name: install rsync
           command: sudo apt install -y rsync
+      - restore_cache:
+          keys: [backend-dependencies]
       - run:
           name: Deploy backend
           working_directory: ./.circleci/ansible
