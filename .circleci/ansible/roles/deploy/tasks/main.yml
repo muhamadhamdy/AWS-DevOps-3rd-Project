@@ -9,7 +9,7 @@
 
 - name: "Unarchive udapeople app files"
   unarchive:
-    src: artifact-${CIRCLE_WORKFLOW_ID:0:7}.tar.gz
+    src: artifact.tar.gz
     dest: ~/udapeople-app
 
 #- name: "start pm2 server"
