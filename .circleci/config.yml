@@ -307,14 +307,16 @@ jobs:
           #working_directory: ~/backend
           command: |
               cd backend
-              npm install
-              npm run build
-              npm audit fix --force
+              #npm install
+              #npm run build
+              #npm audit fix --force
               tar -czf artifact.tar.gz dist node_modules
+              ls -l
+              cd .. && cd ..
               ls -l
               cd ..
               ls -l
-              cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
+              #cp backend/artifact.tar.gz /home/circleci/project/.circleci/ansible/roles/deploy/files
               ls .circleci/ansible/roles/deploy/files
       
   deploy-backend:
