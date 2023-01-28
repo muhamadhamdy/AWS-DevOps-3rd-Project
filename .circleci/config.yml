@@ -213,7 +213,7 @@ jobs:
       - install_awscli
       - install_ansible
       - add_ssh_keys:
-          fingerprints: ["a5:3d:d0:d7:0e:37:bf:e5:d5:2b:1c:5f:94:41:10:4d"]
+          fingerprints: ["6a:d1:4e:e3:6c:3a:9d:86:80:d6:2c:69:c5:51:c5:6c"]
       - attach_workspace:
           at: ~/
       - run:
@@ -221,7 +221,7 @@ jobs:
           working_directory: ./.circleci/ansible
           command: |
             cat inventory.txt 
-            ansible-playbook -i .inventory.txt configure-server.yml
+            ansible-playbook -i inventory.txt configure-server.yml
       - destroy_environment:
           id: ${CIRCLE_WORKFLOW_ID:0:7}
 
@@ -267,10 +267,11 @@ jobs:
                --filters "Name=tag:Name,Values=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
                --query 'Reservations[*].Instances[*].PublicIpAddress' \
                --output text)
-            echo 'Backend IP : ' && echo $BACKEND_PUBLIC_IP
-            curl -d 'http://${BACKEND_PUBLIC_IP}:3030' https://kvdb.io/${KVDB_BUCKET}/backendurl
+            echo 'Backend IP : ' && echo 'http://${BACKEND_PUBLIC_IP}:3030' && echo "http://${BACKEND_PUBLIC_IP}:3030"
+            curl -d "http://${BACKEND_PUBLIC_IP}:3030" https://kvdb.io/${KVDB_BUCKET}/backendurl
             echo "API_URL=http://${BACKEND_PUBLIC_IP}:3030" >> frontend/.env
             cat frontend/.env
+            curl https://kvdb.io/${KVDB_BUCKET}/backendurl
       - run:
           name: Deploy frontend artifact
           command: |
@@ -291,8 +292,9 @@ jobs:
       - checkout
       - install_awscli
       - install_ansible
+      
       - add_ssh_keys:
-          fingerprints: ["a5:3d:d0:d7:0e:37:bf:e5:d5:2b:1c:5f:94:41:10:4d"]
+          fingerprints: ["6a:d1:4e:e3:6c:3a:9d:86:80:d6:2c:69:c5:51:c5:6c"]
       - attach_workspace:
           at: ~/ 
       - restore_cache:
