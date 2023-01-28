@@ -19,12 +19,11 @@
       raw: test -e /usr/bin/python3 || (apt -y update && apt install -y python3)
       changed_when: false
     
-    #- name: install rsync
-    #  connection: local
-    #  package:
-    #    name: rsync
-    #    state: present
-    #- setup:
+    - name: install rsync
+      connection: local
+      package:
+        name: rsync
+        state: present
 
   roles:
     - deploy

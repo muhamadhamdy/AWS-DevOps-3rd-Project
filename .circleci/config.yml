@@ -286,12 +286,14 @@ jobs:
       - revert_migrations:
           id: ${CIRCLE_WORKFLOW_ID:0:7}
            
-                    
+
   deploy-backend:
     docker:
-      - image: python:3.9.0-alpine
+      - image: cimg/node:13.8.0
     steps:
       - checkout
+      - install_awscli
+      - install_ansible
       - add_ssh_keys:
           fingerprints: ["6a:d1:4e:e3:6c:3a:9d:86:80:d6:2c:69:c5:51:c5:6c"]
       - attach_workspace:
@@ -299,19 +301,22 @@ jobs:
       - restore_cache:
           keys: [backend-dependencies]
       - run:
-          name: Install dependencies
-          working_directory: /tmp
+          name: install rsync
+          command: sudo apt install -y rsync
+      - run:
+          name: Install backend dependencies
+          working_directory: ~/backend
           command: |
-            apk add --update ansible curl rsync openssh nodejs npm
-            ansible --version
-            pip install awscli
-            aws --version
+              npm install
+              npm run build
+              tar -czf artifact-${CIRCLE_WORKFLOW_ID:0:7}.tar.gz ./dist ./node_modules
+              cp artifact-${CIRCLE_WORKFLOW_ID:0:7}.tar.gz ~/.circleci/ansible/roles/deploy/files
       - run:
           name: Deploy backend
-          working_directory: ./.circleci/ansible
+          working_directory: ~/.circleci/ansible
           command: |
             cat inventory.txt
-            ansible-playbook -i inventory.txt deploy-backend.yml -vv
+            ansible-playbook -i inventory.txt deploy-backend.yml -vvv
       - destroy_environment:
           id: ${CIRCLE_WORKFLOW_ID:0:7}
       - revert_migrations:
