@@ -3,7 +3,7 @@ version: 2.1
 executor:
     node:
       docker:
-        - image: cimg/node:19.5.0
+        - image: cimg/node:16.18.0
     python:
       docker:
         - image: python:3.9.0-alpine
@@ -73,7 +73,7 @@ jobs:
 
   build-frontend:
     docker:
-      - image: cimg/node:19.5.0
+      - image: cimg/node:16.18.0
     steps:
       - checkout
       - restore_cache:
@@ -90,7 +90,7 @@ jobs:
 
   build-backend:
     docker:
-      - image: cimg/node:19.5.0
+      - image: cimg/node:16.18.0
     steps:
       - checkout
       - restore_cache:
@@ -107,7 +107,7 @@ jobs:
 
   test-frontend:
     docker:
-      - image: cimg/node:19.5.0
+      - image: cimg/node:16.18.0
     steps:
       - checkout
       - restore_cache:
@@ -121,7 +121,7 @@ jobs:
 
   test-backend:
     docker:
-      - image: cimg/node:19.5.0
+      - image: cimg/node:16.18.0
     steps:
       - checkout
       - restore_cache:
@@ -135,7 +135,7 @@ jobs:
             
   scan-frontend:
     docker:
-      - image: cimg/node:19.5.0
+      - image: cimg/node:16.18.0
     steps:
       - checkout
       - restore_cache:
@@ -151,7 +151,7 @@ jobs:
 
   scan-backend:
     docker:
-      - image: cimg/node:19.5.0
+      - image: cimg/node:16.18.0
     steps:
       - checkout
       - restore_cache:
@@ -207,7 +207,7 @@ jobs:
 
   configure-infrastructure:
     docker:
-      - image: cimg/node:19.5.0
+      - image: cimg/node:16.18.0
     steps:
       - checkout
       - install_awscli
@@ -227,7 +227,7 @@ jobs:
 
   run-migrations:
     docker:
-      - image: cimg/node:19.5.0
+      - image: cimg/node:16.18.0
     steps:
       - checkout
       - install_awscli
@@ -251,7 +251,7 @@ jobs:
 
   deploy-frontend:
     docker:
-      - image: cimg/node:19.5.0
+      - image: cimg/node:16.18.0
     steps:
       - checkout
       - install_awscli
@@ -285,7 +285,7 @@ jobs:
                     
   deploy-backend:
     docker:
-      - image: cimg/node:19.5.0
+      - image: cimg/node:16.18.0
     steps:
       - checkout
       - install_awscli
