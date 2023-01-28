@@ -432,6 +432,12 @@ workflows:
           requires: [run-migrations]
       - deploy-backend:
           requires: [run-migrations]
+      - hold:
+          filters:
+            branches:
+              only:
+                - main
+          type: approval
       - smoke-test:
           requires: [deploy-backend, deploy-frontend]
       - cloudfront-update:
