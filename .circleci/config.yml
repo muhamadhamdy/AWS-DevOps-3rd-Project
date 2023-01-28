@@ -293,7 +293,7 @@ jobs:
       - add_ssh_keys:
           fingerprints: ["6a:d1:4e:e3:6c:3a:9d:86:80:d6:2c:69:c5:51:c5:6c"]
       - attach_workspace:
-          at: .
+          at: ~/
       - run:
           name: Install dependencies
           working_directory: /tmp
@@ -307,7 +307,7 @@ jobs:
           working_directory: ./.circleci/ansible
           command: |
             cat inventory.txt
-            ansible-playbook -i inventory.txt deploy-server.yaml -vv
+            ansible-playbook -i inventory.txt deploy-backend.yml -vv
       - destroy_environment:
           id: ${CIRCLE_WORKFLOW_ID:0:7}
       - revert_migrations:
