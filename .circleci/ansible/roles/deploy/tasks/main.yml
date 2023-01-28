@@ -11,7 +11,7 @@
 
 - name: "Build backend"
   shell: |
-    cd ~/udapeople-app
+    cd /home/ubuntu/udapeople-app
     npm install
     npm run build
 
@@ -22,7 +22,7 @@
 
 - name: "start node app with pm2"
   shell: |
-    cd ~/udapeople_app/dist
+    cd /home/ubuntu/udapeople_app/dist
     pm2 stop default
     pm2 start -f main.js
   register: execute_node
