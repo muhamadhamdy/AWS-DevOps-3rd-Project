@@ -207,15 +207,21 @@ jobs:
 
   configure-infrastructure:
     docker:
-      - image: cimg/node:13.8.0
+      - image: python:3.9.0-alpine
     steps:
       - checkout
-      - install_awscli
-      - install_ansible
       - add_ssh_keys:
           fingerprints: ["a5:3d:d0:d7:0e:37:bf:e5:d5:2b:1c:5f:94:41:10:4d"]
       - attach_workspace:
-          at: ~/
+          at: .
+      - run:
+          name: Install dependencies
+          working_directory: /tmp
+          command: |
+            apk add --update ansible curl rsync openssh nodejs npm
+            ansible --version
+            pip install awscli
+            aws --version
       - run:
           name: Configure server
           working_directory: ./.circleci/ansible
@@ -286,15 +292,21 @@ jobs:
                     
   deploy-backend:
     docker:
-      - image: cimg/node:13.8.0
+      - image: python:3.9.0-alpine
     steps:
       - checkout
-      - install_awscli
-      - install_ansible
       - add_ssh_keys:
           fingerprints: ["a5:3d:d0:d7:0e:37:bf:e5:d5:2b:1c:5f:94:41:10:4d"]
       - attach_workspace:
-          at: ~/ 
+          at: .
+      - run:
+          name: Install dependencies
+          working_directory: /tmp
+          command: |
+            apk add --update ansible curl rsync openssh nodejs npm
+            ansible --version
+            pip install awscli
+            aws --version
       - restore_cache:
           keys: [backend-dependencies]
       - run:
