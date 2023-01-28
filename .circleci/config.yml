@@ -314,7 +314,7 @@ jobs:
               cd deploy
               ls -l -a
               cd files
-              ls -l -a
+              ls -l 
 
       
   deploy-backend:
