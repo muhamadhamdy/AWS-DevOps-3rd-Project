@@ -20,12 +20,18 @@ commands:
         default: "${CIRCLE_WORKFLOW_ID:0:7}"
     steps:
       - run:
-          name: Destroy Cloud Formation Stacks and infrastructure
+          name: Destroy Cloud Formation frontend stack and infrastructure
           when: on_fail
           command: |
+            echo "Deleting frontend cloud formation stack start"
             aws s3 rm s3://udapeople-<< parameters.id >> --recursive
-            aws cloudformation delete-stack --stack-name udapeople-backend-<< parameters.id >>|
             aws cloudformation delete-stack --stack-name udapeople-frontend-<< parameters.id >>
+      - run:
+          name: Destroy Cloud Formation backend stack and infrastructure
+          when: on_fail
+          command: |
+            echo "Deleting backend cloud formation stack start"
+            aws cloudformation delete-stack --stack-name udapeople-backend-<< parameters.id >>
 
   revert_migrations:
     description: Revert the last migration if successfully run in the current workflow.
@@ -286,57 +292,35 @@ jobs:
       - revert_migrations:
           id: ${CIRCLE_WORKFLOW_ID:0:7}
            
-
-  deploy-backend:
+  deploy-backend1:
     docker:
-      - image: cimg/node:13.8.0
+      - image: python:3.9.0-alpine
     steps:
       - checkout
-      - install_awscli
-      - install_ansible
       - add_ssh_keys:
           fingerprints: ["a5:3d:d0:d7:0e:37:bf:e5:d5:2b:1c:5f:94:41:10:4d"]
       - attach_workspace:
-          at: ~/
-      - restore_cache:
-          keys: [backend-dependencies]
+          at: .
       - run:
-          name: install rsync
-          command: sudo apt install -y rsync
-      - run:
-          name: Install backend dependencies
+          name: Install dependencies
+          working_directory: /tmp
           command: |
-              cd backend
-              npm install
-              npm run build
-              npm audit fix --force
-              
-              echo "ENVIRONMENT=production" >> dist/.env
-              echo "VERSION=1" >> dist/.env
-              echo "TYPEORM_CONNECTION=${TYPEORM_CONNECTION}" >> dist/.env
-              echo "TYPEORM_MIGRATIONS_DIR=${TYPEORM_MIGRATIONS_DIR}" >> dist/.env
-              echo "TYPEORM_ENTITIES=${TYPEORM_ENTITIES}" >> dist/.env
-              echo "TYPEORM_MIGRATIONS=${TYPEORM_MIGRATIONS}" >> dist/.env
-              echo "TYPEORM_HOST=localhost" >> dist/.env
-              echo "TYPEORM_PORT=5532" >> dist/.env
-              echo "TYPEORM_USERNAME=postgres" >> dist/.env
-              echo "TYPEORM_PASSWORD=${TYPEORM_PASSWORD}" >> dist/.env
-              echo "TYPEORM_DATABASE=${TYPEORM_DATABASE}" >> dist/.env
-
-              tar -czf artifact.tar.gz dist node_modules
-              cd ..
-              sudo cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
-              ls .circleci/ansible/roles/deploy/files
+            apk add --update ansible curl rsync openssh nodejs npm
+            ansible --version
+            pip install awscli
+            aws --version
       - run:
           name: Deploy backend
+          working_directory: ./.circleci/ansible
           command: |
-            cd .circleci/ansible
             cat inventory.txt
-            ansible-playbook -i inventory.txt deploy-backend.yml -vvv
+            ansible-playbook -i inventory.txt deploy-backend.yaml -vv
       - destroy_environment:
           id: ${CIRCLE_WORKFLOW_ID:0:7}
+          when: on_fail
       - revert_migrations:
           id: ${CIRCLE_WORKFLOW_ID:0:7}
+          when: on_fail
 
   smoke-test:
     docker:
@@ -408,9 +392,12 @@ jobs:
           command: |
             OldWorkflowID=$(curl --insecure https://kvdb.io/${KVDB_BUCKET}/workflowid)
             CurrentWorkflowID=${CIRCLE_WORKFLOW_ID:0:7}
+            echo OldWorkFlowID: "${OldWorkflowID}"
+            echo CurrentWorkflowID: "${CurrentWorkflowID}"
+            echo 
             if [[ "$CurrentWorkflowID" != "$OldWorkflowID" ]]
             then
-              echo "$OldWorkflowID!=$CurrentWorkflowID => old version will be deleted."
+              echo "${OldWorkflowID}!=${CurrentWorkflowID} => old version will be deleted."
               aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
               aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
               aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
