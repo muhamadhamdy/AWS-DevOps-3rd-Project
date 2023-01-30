@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "lib": ["DOM","ES2015"],
     "module": "commonjs",
     "declaration": true,
     "noImplicitAny": false,
@@ -9,12 +8,7 @@
     "allowSyntheticDefaultImports": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "moduleResolution": "node",
-    "jsx": "react",
-    "skipDefaultLibCheck": true,
     "target": "es6",
-    "strict": true,
-    "strictNullChecks": false,
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./src"
