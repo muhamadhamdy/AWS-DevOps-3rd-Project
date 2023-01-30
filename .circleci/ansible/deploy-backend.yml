@@ -1,6 +1,6 @@
 ---
 
-- name: "configuration play." 
+- name: "Deploy backend configuration." 
   hosts: web
   user: ubuntu
   gather_facts: false
@@ -19,6 +19,7 @@
 
   environment:
      ENVIRONMENT: production
+     VERSION: 1
      TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION') }}"
      TYPEORM_MIGRATIONS_DIR: "./migrations"
      TYPEORM_MIGRATIONS: "./migrations/*.js"
