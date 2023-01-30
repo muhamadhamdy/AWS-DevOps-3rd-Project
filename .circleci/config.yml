@@ -20,7 +20,6 @@ commands:
         default: "${CIRCLE_WORKFLOW_ID:0:7}"
     steps:
       - run:
-<<<<<<< HEAD
           name: Destroy Cloud Formation Frontend Stacks and infrastructure
           when: on_fail
           command: |
@@ -32,19 +31,6 @@ commands:
           when: on_fail
           command: |
             echo "Deleting Cloud Formation Backend Stack"
-=======
-          name: Destroy Cloud Formation frontend stack and infrastructure
-          when: on_fail
-          command: |
-            echo "Deleting frontend cloud formation stack start "
-            aws s3 rm s3://udapeople-<< parameters.id >> --recursive
-            aws cloudformation delete-stack --stack-name udapeople-frontend-<< parameters.id >>
-      - run:
-          name: Destroy Cloud Formation backend stack and infrastructure
-          when: on_fail
-          command: |
-            echo "Deleting backend cloud formation stack start"
->>>>>>> 4e6708228b2f06e7303dd4c5f44c2797a8897d6f
             aws cloudformation delete-stack --stack-name udapeople-backend-<< parameters.id >>
 
   revert_migrations:
@@ -406,22 +392,13 @@ jobs:
           command: |
             OldWorkflowID=$(curl --insecure https://kvdb.io/${KVDB_BUCKET}/workflowid)
             CurrentWorkflowID=${CIRCLE_WORKFLOW_ID:0:7}
-<<<<<<< HEAD
             echo OldWorkflowID: "${OldWorkflowID}"
-            echo
+            echo " "
             echo CurrentWorkflowID: "${CurrentWorkflowID}"
-
+            echo " "
             if [[ "$CurrentWorkflowID" != "$OldWorkflowID" ]]
             then
               echo "$OldWorkflowID != $CurrentWorkflowID => old version will be deleted."
-=======
-            echo OldWorkFlowID: "${OldWorkflowID}"
-            echo CurrentWorkflowID: "${CurrentWorkflowID}"
-            echo 
-            if [[ "$CurrentWorkflowID" != "$OldWorkflowID" ]]
-            then
-              echo "${OldWorkflowID}!=${CurrentWorkflowID} => old version will be deleted."
->>>>>>> 4e6708228b2f06e7303dd4c5f44c2797a8897d6f
               aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
               aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
               aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
