@@ -23,7 +23,7 @@ commands:
           name: Destroy Cloud Formation frontend stack and infrastructure
           when: on_fail
           command: |
-            echo "Deleting frontend cloud formation stack start"
+            echo "Deleting frontend cloud formation stack start "
             aws s3 rm s3://udapeople-<< parameters.id >> --recursive
             aws cloudformation delete-stack --stack-name udapeople-frontend-<< parameters.id >>
       - run:
