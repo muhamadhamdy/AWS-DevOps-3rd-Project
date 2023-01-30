@@ -290,7 +290,7 @@ jobs:
       - add_ssh_keys:
           fingerprints: ["a5:3d:d0:d7:0e:37:bf:e5:d5:2b:1c:5f:94:41:10:4d"]
       - attach_workspace:
-          at: .
+          at: ~
       - run:
           name: Install dependencies
           working_directory: /tmp
@@ -301,7 +301,7 @@ jobs:
             aws --version
       - run:
           name: Deploy backend
-          working_directory: ./.circleci/ansible
+          working_directory: ~/.circleci/ansible
           command: |
             BACKEND_PUBLIC_IP=$(aws ec2 describe-instances \
                --filters "Name=tag:Name,Values=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
