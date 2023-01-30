@@ -290,25 +290,27 @@ jobs:
       - add_ssh_keys:
           fingerprints: ["a5:3d:d0:d7:0e:37:bf:e5:d5:2b:1c:5f:94:41:10:4d"]
       - attach_workspace:
-          at: ~/
+          at: ./
       - restore_cache:
           keys: [backend-dependencies]
       - run:
           name: Install dependencies
           working_directory: /tmp
           command: |
-            apk add --update ansible curl rsync openssh nodejs npm
+            apk add --update ansible curl rsync openssh nodejs npm tree
             ansible --version
             pip install awscli
             aws --version
       - run:
           name: Deploy backend
-          working_directory: ~/.circleci/ansible
+          working_directory: ./
           command: |
+            tree -a -d -L 5
             BACKEND_PUBLIC_IP=$(aws ec2 describe-instances \
                --filters "Name=tag:Name,Values=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
                --query 'Reservations[*].Instances[*].PublicIpAddress' \
                --output text)
+            cd ./.circleci/ansible
             echo $BACKEND_PUBLIC_IP >> inventory.txt
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml -vvv
