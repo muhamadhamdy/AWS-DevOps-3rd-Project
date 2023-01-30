@@ -1,16 +1,5 @@
 version: 2.1
 
-executor:
-    node:
-      docker:
-        - image: cimg/node:13.8.0
-    python:
-      docker:
-        - image: python:3.9.0-alpine
-    aws:
-      docker:
-        - image: amazon/aws-cli
-
 commands:
   destroy_environment:
     description: Destroy Cloud Formation Stacks and infrastructure
@@ -49,7 +38,7 @@ commands:
             if(( $SUCCESS==1 )); 
             then
               echo "Reverting Migrations Start"
-              cd ~/project/backend
+
               npm install
               npm run migration:revert
               echo "Reverting Migrations End"
@@ -75,7 +64,6 @@ commands:
             sudo apt install software-properties-common -y
             sudo add-apt-repository --yes --update ppa:ansible/ansible
             sudo apt install ansible -y 
-
 
 jobs:
 
@@ -316,7 +304,7 @@ jobs:
           working_directory: ./.circleci/ansible
           command: |
             cat inventory.txt
-            ansible-playbook -i inventory.txt deploy-backend.yaml -vv
+            ansible-playbook -i inventory.txt deploy-backend.yml -vvv
       - destroy_environment:
           id: ${CIRCLE_WORKFLOW_ID:0:7}
       - revert_migrations:
