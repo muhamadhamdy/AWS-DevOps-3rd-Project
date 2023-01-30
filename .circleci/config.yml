@@ -290,7 +290,9 @@ jobs:
       - add_ssh_keys:
           fingerprints: ["a5:3d:d0:d7:0e:37:bf:e5:d5:2b:1c:5f:94:41:10:4d"]
       - attach_workspace:
-          at: ~
+          at: ~/
+      - restore_cache:
+          keys: [backend-dependencies]
       - run:
           name: Install dependencies
           working_directory: /tmp
