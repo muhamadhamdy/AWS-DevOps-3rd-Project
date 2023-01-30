@@ -1,27 +1,31 @@
 ---
-- name: "show environment variables"
-  shell: env
+  - name: "show remote environment"
+    shell: env
 
-- name: "Create udapeople app directory"
-  file:
-    path: ~/udapeople-app
-    state: directory
+  - name: "copy backend binaries"
+    become: yes
+    synchronize:
+      src: ../../backend/dist
+      dest: /home/ubuntu/udapeople_app
+      recursive: true
 
-- name: "Unarchive udapeople app files"
-  unarchive:
-    src: artifact.tar.gz
-    dest: ~/udapeople-app
+  - name: "copy node_modules"
+    become: yes
+    synchronize:
+      src: ../../backend/node_modules
+      dest: /home/ubuntu/udapeople_app
+      recursive: true
 
-- name: "start pm2 server"
-  shell: |
-    cd ~/udapeople-app/dist
-    pm2 stop default
-    pm2 start main.js
-  register: execute_node
+  - name: "delete anything that might already be running"
+    become: true
+    command: pm2 delete all
+    ignore_errors: true
 
-- name: print message
-  debug:
-    msg: "{{ execute_node.stdout_lines }}"
+  - name: "start server"
+    become: true
+    command: pm2 start -f ./main.js
+    args:
+      chdir: /home/ubuntu/udapeople_app/dist
 
 - name: "Configure pm2 to start as service"
   become: true
@@ -30,6 +34,7 @@
     
   environment:
      ENVIRONMENT: production
+     VERSION: 1
      TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION') }}"
      TYPEORM_MIGRATIONS_DIR: "./migrations"
      TYPEORM_MIGRATIONS: "./migrations/*.js"

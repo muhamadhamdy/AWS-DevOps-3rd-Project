@@ -9,7 +9,7 @@ log.txt
 *.sublime-workspace
 .vscode/
 npm-debug.log*
-
+*.old
 .idea/
 .ionic/
 .sourcemaps/
