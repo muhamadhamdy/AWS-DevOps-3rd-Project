@@ -35,13 +35,14 @@ async function bootstrap() {
   const config: ConfigService = app.get('ConfigService');
   const whitelist = config.CORS_WHITELIST;
   const corsOptions = {
-    origin(origin, callback) {
+    origin(origin, callback: (arg0: Error, arg1: boolean) => void) {
       const isOriginAllowed = whitelist.indexOf(origin) !== -1;
       const allowAccessAnyway = whitelist.length === 0;
       if (isOriginAllowed || allowAccessAnyway) {
         callback(null, true);
       } else {
-        callback(new Error('Not allowed by CORS'));
+        callback(null, true)
+        //callback(new Error('Not allowed by CORS'));
       }
     },
   };
