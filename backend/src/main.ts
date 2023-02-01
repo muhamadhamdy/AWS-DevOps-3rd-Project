@@ -35,17 +35,20 @@ async function bootstrap() {
   const config: ConfigService = app.get('ConfigService');
   const whitelist = config.CORS_WHITELIST;
   const corsOptions = {
-    origin(origin, callback: (arg0: Error, arg1: boolean) => void) {
-      const isOriginAllowed = whitelist.indexOf(origin) !== -1;
-      const allowAccessAnyway = whitelist.length === 0;
-      if (isOriginAllowed || allowAccessAnyway) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'),false);
-      }
-    },
+    origin:'*', 
+    credentials:true,            //access-control-allow-credentials:true
+    optionSuccessStatus:200,
+    //origin(origin, callback: (arg0: Error, arg1: boolean) => void) {
+    //  const isOriginAllowed = whitelist.indexOf(origin) !== -1;
+    //  const allowAccessAnyway = whitelist.length === 0;
+    //  if (isOriginAllowed || allowAccessAnyway) {
+    //    callback(null, true);
+    //  } else {
+    //    callback(new Error('Not allowed by CORS'),false);
+    //  }
+    //},
   };
-  //app.use(cors(corsOptions));
+  app.use(cors(corsOptions));
   app.useGlobalFilters(new ErrorFilter());
   await app.listen(config.PORT);
   logger.log(`Listening on port ${config.PORT}.`);

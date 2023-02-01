@@ -308,8 +308,6 @@ jobs:
             cat .circleci/ansible/inventory.txt
             cd backend
             npm install
-            npm audit fix --force
-            npm audit fix --audit-level=critical --force
             npm run build
             cd ..
             ansible-playbook -i .circleci/ansible/inventory.txt .circleci/ansible/deploy-backend.yml -vvv
