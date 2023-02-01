@@ -345,7 +345,6 @@ jobs:
             curl "$BACKEND_URL/api/status"
             echo
             echo ${BACKEND_URL}
-            exit 1
       - run:
           name: Frontend smoke test.
           command: |
