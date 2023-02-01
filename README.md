@@ -25,7 +25,7 @@ CI/CD selling proposal [presentation.pdf]
   1. Successful promotion job. [SCREENSHOT08]
   1. Successful cleanup job. [SCREENSHOT09]
   1. Only deploy on pushed to `main` branch. [SCREENSHOT10]
-  1. Provide a screenshot of a graph of your EC2 instance including available memory, available disk space, and CPU usage. [SCREENSHOT11]
+  1. Provide a screenshot of a graph of your EC2 instance including available memory, disk IO, and CPU usage. [SCREENSHOT11]
   1. Provide a screenshot of an alert that was sent by Prometheus. [SCREENSHOT12]
 
 - Your presentation should be in PDF format named "presentation.pdf" and should be included in your code repository root folder. 

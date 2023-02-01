@@ -249,27 +249,30 @@ jobs:
     steps:
       - checkout
       - install_awscli
-
+      - run:
+          name: Install frontend dependencies
+          command: |
+              cd frontend
+              npm install
       - run:
           name: Get backend URL
           command: |
+            cd frontend
             BACKEND_PUBLIC_IP=$(aws ec2 describe-instances \
                --filters "Name=tag:Name,Values=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
                --query 'Reservations[*].Instances[*].PublicIpAddress' \
                --output text)
             curl -d "http://${BACKEND_PUBLIC_IP}:3030" https://kvdb.io/${KVDB_BUCKET}/backendurl
-            echo "API_URL=http://${BACKEND_PUBLIC_IP}:3030" >> frontend/.env
+            echo "API_URL=http://${BACKEND_PUBLIC_IP}:3030" >> .env
+            echo "NODE_ENV=production" >> .env
             cat frontend/.env
             curl https://kvdb.io/${KVDB_BUCKET}/backendurl
       - run:
           name: Deploy frontend artifact
           command: |
             cd frontend
-            npm install
             npm run build
-            echo "NODE_ENV=production" >> .env
             cp .env dist
-            tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
       - destroy_environment:
           id: ${CIRCLE_WORKFLOW_ID:0:7}
