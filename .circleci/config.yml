@@ -21,7 +21,6 @@ commands:
           command: |
             echo "Deleting Cloud Formation Backend Stack"
             aws cloudformation delete-stack --stack-name udapeople-backend-<< parameters.id >> --output text
-
   revert_migrations:
     description: Revert the last migration if successfully run in the current workflow.
     parameters:
@@ -38,12 +37,10 @@ commands:
             if(( $SUCCESS==1 )); 
             then
               echo "Reverting Migrations Start"
-
               npm install
               npm run migration:revert
               echo "Reverting Migrations End"
             fi
-
   install_awscli:
     description: Install AWS CLI v2
     steps:
@@ -64,7 +61,6 @@ commands:
             sudo apt install software-properties-common -y
             sudo add-apt-repository --yes --update ppa:ansible/ansible
             sudo apt install ansible -y 
-
 jobs:
 
   build-frontend:
@@ -116,7 +112,6 @@ jobs:
             cd frontend
             npm install
             npm test
-
   test-backend:
     docker:
       - image: cimg/node:13.8.0
@@ -146,7 +141,6 @@ jobs:
             npm audit fix --force
             npm audit fix --audit-level=critical --force
             npm audit --audit-level=critical
-
   scan-backend:
     docker:
       - image: cimg/node:13.8.0
@@ -162,7 +156,6 @@ jobs:
              npm audit fix --force
              npm audit fix --audit-level=critical --force
              npm audit --audit-level=critical
-
   deploy-infrastructure:
     docker:
       - image: amazon/aws-cli
@@ -256,11 +249,7 @@ jobs:
     steps:
       - checkout
       - install_awscli
-      - run:
-          name: Install dependencies
-          command: |
-            cd frontend
-            npm install
+
       - run:
           name: Get backend URL
           command: |
@@ -276,6 +265,7 @@ jobs:
           name: Deploy frontend artifact
           command: |
             cd frontend
+            npm install
             npm run build
             echo "NODE_ENV=production" >> .env
             cp .env dist
@@ -318,6 +308,8 @@ jobs:
             cat .circleci/ansible/inventory.txt
             cd backend
             npm install
+            npm audit fix --force
+            npm audit fix --audit-level=critical --force
             npm run build
             cd ..
             ansible-playbook -i .circleci/ansible/inventory.txt .circleci/ansible/deploy-backend.yml -vvv
