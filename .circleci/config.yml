@@ -265,7 +265,7 @@ jobs:
             curl -d "http://${BACKEND_PUBLIC_IP}:3030" https://kvdb.io/${KVDB_BUCKET}/backendurl
             echo "API_URL=http://${BACKEND_PUBLIC_IP}:3030" >> .env
             echo "NODE_ENV=production" >> .env
-            cat frontend/.env
+            cat .env
             curl https://kvdb.io/${KVDB_BUCKET}/backendurl
       - run:
           name: Deploy frontend artifact
