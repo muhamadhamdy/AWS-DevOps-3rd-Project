@@ -8,10 +8,10 @@ CI/CD selling proposal [presentation.pdf]
 
 - A text file named `urls.txt` including:
   1. Public Url to GitHub repository (not private) [URL01] https://github.com/muhamadhamdy/AWS-DevOps-3nd-Project
-  1. Public URL for your S3 Bucket (aka, your green candidate front-end) [URL02] http://udapeople-d71cab2.s3-website-us-east-1.amazonaws.com/
-  1. Public URL for your CloudFront distribution (aka, your blue production front-end) [URL03] https://du1f6vp68fzdd.cloudfront.net/
-  1. Public URLs to deployed application back-end in EC2 [URL04] http://ec2-52-204-47-48.compute-1.amazonaws.com:3030
-  1. Public URL to your Prometheus Server [URL05] http://ec2-34-207-227-198.compute-1.amazonaws.com:9090
+  1. Public URL for your S3 Bucket (aka, your green candidate front-end) [URL02] http://udapeople-651e83c.s3-website-us-east-1.amazonaws.com/
+  1. Public URL for your CloudFront distribution (aka, your blue production front-end) [URL03] https://dmx4m0wyxxmbp.cloudfront.net/
+  1. Public URLs to deployed application back-end in EC2 [URL04] http://ec2-54-160-75-130.compute-1.amazonaws.com:3030
+  1. Public URL to your Prometheus Server [URL05] http://ec2-100-26-142-7.compute-1.amazonaws.com:9090
 
 
 - Screenshots 
@@ -27,6 +27,8 @@ CI/CD selling proposal [presentation.pdf]
   1. Only deploy on pushed to `main` branch. [SCREENSHOT10]
   1. Provide a screenshot of a graph of your EC2 instance including available memory, disk IO, and CPU usage. [SCREENSHOT11]
   1. Provide a screenshot of an alert that was sent by Prometheus. [SCREENSHOT12]
+  1. A screenshot to show backend status check [URL04_SCREENSHOT_1]
+  1. A  screenshot to show backend connected to RDS and retrive employees [URL04_SCREENSHOT_2]
 
 - Your presentation should be in PDF format named "presentation.pdf" and should be included in your code repository root folder. 
 
@@ -58,4 +60,6 @@ Before you submit your project, please check your work against the project rubri
 [SCREENSHOT10]: screenshot10.jpg
 [SCREENSHOT11]: screenshot11.jpg
 [SCREENSHOT12]: screenshot12.jpg
-
+[URL03_SCREENSHOT]: URL03_SCREENSHOT.jpg
+[URL04_SCREENSHOT_1]: URL04_SCREENSHOT_1.jpg
+[URL04_SCREENSHOT_2]: URL04_SCREENSHOT_2.jpg
